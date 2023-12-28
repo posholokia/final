@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  django:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: bash -c "python3 /app/back/manage.py makemigrations  && \
+                      python3 /app/back/manage.py migrate  && \
+                      python3 /app/back/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app/back/
+    ports:
+      - "8000:8000"
+
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: npm start
+    tty: true
+    volumes:
+      - ./frontend:/app/front/
+      - node_modules:/app/front/node_modules
+    ports:
+      - "8080:8080"
+
+
+volumes:
+  node_modules:
